@@ -22,9 +22,7 @@ export class ArticlesRepository {
   }
 
   async addArticle(article: CreateArticle) {
-    this.log.debug(article, ArticlesRepository.name)
-
-    const result = this.db
+    return this.db
       .query(
         `INSERT INTO articles (title, author) VALUES ($title, $author) RETURNING id`,
       )
@@ -32,10 +30,6 @@ export class ArticlesRepository {
         $title: article.title,
         $author: article.author,
       }) as Article
-
-    this.log.debug(result, ArticlesRepository.name)
-
-    return result
   }
 
   async findArticleById(id: number) {

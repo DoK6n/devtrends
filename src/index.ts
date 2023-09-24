@@ -1,28 +1,36 @@
 import cors from '@elysiajs/cors'
-import { createPinoLogger, httpExceptionFilter, logger } from './common/plugins'
+import {
+  createPinoLogger,
+  httpExceptionFilter,
+  logger,
+  loggingInterceptor,
+} from './common/plugins'
 import { articlesRoute } from './routes/articles.route'
 import { Elysia } from 'elysia'
 import swagger from '@elysiajs/swagger'
+import { setup } from './config'
 
 const _serve = { serve: { hostname: 'localhost' } }
 
-const server = new Elysia(_serve)
+export const app = new Elysia(_serve)
   .get('/', () => 'healthy')
+  .use(setup())
   .use(cors())
   .use(swagger())
   .use(logger())
+  .use(loggingInterceptor())
   .use(httpExceptionFilter())
+  .use(articlesRoute())
 
-server.use(articlesRoute)
+// eslint-disable-next-line no-magic-numbers
+const PORT = Bun.env.PORT || 8001
 
-const PORT = 8001
-
-server.listen(PORT, ({ hostname, port }) => {
+app.listen(PORT, ({ hostname, port }) => {
   createPinoLogger().info(`🦊 Elysia is running at ${hostname}:${port}`)
 })
 
-server.onStop(({ app, log }) =>
+app.onStop(({ app, log }) =>
   log.info(`🦊 Server ${app?.server?.hostname}:${app.server?.port} stopped`),
 )
 
-export type Server = typeof server
+export type App = typeof app

@@ -1,5 +1,5 @@
 import Elysia from 'elysia'
-import { date, isEmptyObject } from '../../utils'
+import { date } from '../../utils'
 import pino, { type Logger as PinoLogger, type LoggerOptions } from 'pino'
 
 const loggerOptions: LoggerOptions = {
@@ -10,7 +10,7 @@ const loggerOptions: LoggerOptions = {
     },
   },
   base: undefined,
-  level: 'info',
+  level: Bun.env.PORT === 'production' ? 'info' : 'debug',
   // transport: {
   //   target: 'pino-pretty',
   //   options: {
@@ -26,27 +26,10 @@ export const createPinoLogger = () => pino(loggerOptions)
 export const logger = () =>
   new Elysia({
     name: 'logger',
+  }).derive(() => {
+    const log = createPinoLogger()
+
+    return { log }
   })
-    .derive(() => {
-      const log = createPinoLogger()
-
-      return { log }
-    })
-    .onBeforeHandle(({ request, params, query, body, log }) => {
-      const logObject = {
-        params,
-        body,
-        ...(isEmptyObject(query) ? {} : { query }),
-      }
-
-      log.info(logObject, `request | [${request.method}] - ${request.url}`)
-    })
-    .onAfterHandle(({ request, log, response }) => {
-      const logObject = {
-        response,
-      }
-
-      log.info(logObject, `response | [${request.method}] - ${request.url}`)
-    })
 
 export type Logger = PinoLogger<typeof loggerOptions>
