@@ -5,7 +5,9 @@
   "scripts": {
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "dev": "bun run --watch src/index.ts | pino-pretty"
+    "predev": "bun run format & bun run lint",
+    "dev": "bun run --watch src/index.ts | pino-pretty",
+    "test": "bun test --watch --test-name-pattern *.spec.ts"
   },
   "dependencies": {
     "@elysiajs/cors": "^0.7.0",
@@ -24,22 +26,5 @@
     "pino-pretty": "^10.2.0",
     "prettier": "^3.0.3",
     "typescript": "^5.2.2"
-  },
-  "jest": {
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "ts"
-    ],
-    "rootDir": "src",
-    "testRegex": ".*\\.(spec|e2e-spec|unit-spec)\\.ts$",
-    "transform": {
-      "^.+\\.(t|j)s$": "ts-jest"
-    },
-    "collectCoverageFrom": [
-      "**/*.(t|j)s"
-    ],
-    "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
   }
 }
