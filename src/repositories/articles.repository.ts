@@ -1,5 +1,5 @@
 import { Database } from 'bun:sqlite'
-import { Logger } from 'src/middlewares'
+import { Logger } from 'src/common/plugins'
 
 export interface Article {
   id: number
@@ -15,8 +15,6 @@ export class ArticlesRepository {
   constructor(private readonly log: Logger) {
     this.db = new Database('./src/test/db/devtrends.db')
     this.init()
-      .then(() => console.log('Database initialized'))
-      .catch(console.error)
   }
 
   async getArticles() {
@@ -28,7 +26,7 @@ export class ArticlesRepository {
 
     const result = this.db
       .query(
-        `INSERT INTO articles (title, author) VALUES ($title, $author) RETURNING id`
+        `INSERT INTO articles (title, author) VALUES ($title, $author) RETURNING id`,
       )
       .get({
         $title: article.title,
@@ -48,7 +46,7 @@ export class ArticlesRepository {
 
   async updateArticleById(article: Article) {
     return this.db.run(
-      `UPDATE articles SET title = '${article.title}', author = '${article.author}' WHERE id = ${article.id}`
+      `UPDATE articles SET title = '${article.title}', author = '${article.author}' WHERE id = ${article.id}`,
     )
   }
 
@@ -57,8 +55,13 @@ export class ArticlesRepository {
   }
 
   async init() {
-    return this.db.run(
-      `CREATE TABLE IF NOT EXISTS articles (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, author TEXT NOT NULL)`
-    )
+    try {
+      await this.db.run(
+        `CREATE TABLE IF NOT EXISTS articles (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, author TEXT NOT NULL)`,
+      )
+      this.log.info('Database initialized')
+    } catch (error) {
+      this.log.error(error)
+    }
   }
 }

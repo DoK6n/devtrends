@@ -1,11 +1,11 @@
 import Elysia from 'elysia'
-import { date, isEmptyObject } from '../common/utils'
+import { date, isEmptyObject } from '../../utils'
 import pino, { type Logger as PinoLogger, type LoggerOptions } from 'pino'
 
 const loggerOptions: LoggerOptions = {
   redact: ['DB_CONN'],
   formatters: {
-    level(label) {
+    level: label => {
       return { level: label }
     },
   },
@@ -27,7 +27,7 @@ export const logger = () =>
   new Elysia({
     name: 'logger',
   })
-    .derive(ctx => {
+    .derive(() => {
       const log = createPinoLogger()
 
       return { log }

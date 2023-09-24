@@ -22,7 +22,7 @@ export const articlesRoute = new Elysia().group('/v1', app =>
       },
       {
         response: 'articleListResponse',
-      }
+      },
     )
     .post(
       'articles/add',
@@ -35,6 +35,6 @@ export const articlesRoute = new Elysia().group('/v1', app =>
       {
         body: 'addArticle',
         response: 'articleResponse',
-      }
-    )
+      },
+    ),
 )
