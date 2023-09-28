@@ -11,6 +11,7 @@ describe('E2E articles test', () => {
   const _serve = { serve: { hostname: 'localhost' } }
   // TODO 테스트 종료 후 테스트용 데이터 제거
 
+  // eslint-disable-next-line no-magic-numbers
   const PORT = Bun.env.PORT || 8001
 
   const app = new Elysia(_serve)
@@ -60,6 +61,35 @@ describe('E2E articles test', () => {
         const { data } = await client.v1.articles[article.id].get()
 
         expect(data).toStrictEqual({ data: article })
+      })
+    })
+
+    describe('PATCH /v1/articles/update/:articleId', () => {
+      it('게시글 업데이트', async () => {
+        const resposnse = await client.v1.articles.update['1'].patch({
+          title: '수정된 게시글',
+          author: 'tester',
+        })
+
+        expect(resposnse.data).toStrictEqual({
+          data: {
+            id: 1,
+            title: '수정된 게시글',
+            author: 'tester',
+          },
+        })
+      })
+    })
+
+    describe('DELETE /v1/articles/remove/:articleId', () => {
+      it('게시글 삭제', async () => {
+        const { data } = await client.v1.articles.remove['3'].delete()
+
+        expect(data).toStrictEqual({
+          data: {
+            id: 3,
+          },
+        })
       })
     })
   })

@@ -39,20 +39,36 @@ export class ArticlesRepository {
   }
 
   async updateArticleById(article: Article) {
-    return this.db.run(
-      `UPDATE articles SET title = '${article.title}', author = '${article.author}' WHERE id = ${article.id}`,
-    )
+    return this.db
+      .query(
+        `UPDATE articles SET title = $title, author = $author WHERE id = $id RETURNING id`,
+      )
+      .get({
+        $id: article.id,
+        $title: article.title,
+        $author: article.author,
+      }) as { id: Article['id'] }
   }
 
   async deleteArticleById(id: number) {
-    return this.db.query(`DELETE FROM articles WHERE id = ?`).get(id) as Article
+    return this.db
+      .query(`DELETE FROM articles WHERE id = ? RETURNING id`)
+      .get(id) as { id: Article['id'] }
   }
 
   async init() {
     try {
+      // 기존 테이블 삭제
+      await this.db.run(`DROP TABLE IF EXISTS articles`)
+
+      // 테이블 생성
       await this.db.run(
-        `CREATE TABLE IF NOT EXISTS articles (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, author TEXT NOT NULL)`,
+        `CREATE TABLE articles (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, author TEXT NOT NULL)`,
       )
+
+      // await this.db.run(
+      //   `CREATE TABLE IF NOT EXISTS articles (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, author TEXT NOT NULL)`,
+      // )
       this.log.info('Database initialized')
     } catch (error) {
       this.log.error(error)

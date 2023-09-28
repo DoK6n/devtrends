@@ -1,20 +1,12 @@
 import { Elysia } from 'elysia'
 import { setup } from '../config'
-import {
-  addArticleModel,
-  articleListResponseModel,
-  articleResponseModel,
-  findArticleModel,
-} from '../models'
+import { articleModel } from 'src/models'
 
 export const articlesRoute = () => (app: Elysia) =>
   app.group('/v1', app =>
     app
       .use(setup())
-      .use(addArticleModel)
-      .use(findArticleModel)
-      .use(articleResponseModel)
-      .use(articleListResponseModel)
+      .use(articleModel)
       .get(
         '/articles',
         async ({ db }) => {
@@ -53,7 +45,42 @@ export const articlesRoute = () => (app: Elysia) =>
         },
         {
           params: 'findArticle',
-          response: 'articleResponse'
+          response: 'articleResponse',
+        },
+      )
+      .patch(
+        '/articles/update/:articleId',
+        async ({ db, params, body }) => {
+          const updatedArticleId = await db.updateArticleById({
+            id: params.articleId,
+            title: body.title,
+            author: body.author,
+          })
+
+          const retrievedArticle = await db.findArticleById(updatedArticleId.id)
+
+          return {
+            data: retrievedArticle,
+          }
+        },
+        {
+          params: 'articleId',
+          body: 'updateArticleBody',
+          response: 'updateArticleResponse',
+        },
+      )
+      .delete(
+        '/articles/remove/:articleId',
+        async ({ db, params }) => {
+          const deletedArticleId = await db.deleteArticleById(params.articleId)
+
+          return {
+            data: deletedArticleId,
+          }
+        },
+        {
+          params: 'articleId',
+          response: 'deleteArticleResponse',
         },
       ),
   )

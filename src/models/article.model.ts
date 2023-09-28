@@ -1,8 +1,8 @@
 import Elysia, { t } from 'elysia'
 
-// const id = t.Object({
-//   id: t.Number(),
-// })
+const articleId = t.Object({
+  articleId: t.Numeric(),
+})
 
 const article = t.Object({
   id: t.Number(),
@@ -40,3 +40,38 @@ export const articleListResponseModel = (app: Elysia) =>
       data: articleList,
     }),
   })
+
+export const articleUpdateModel = (app: Elysia) =>
+  app.model({
+    articleId,
+    updateArticleBody: t.Object({
+      title: t.String(),
+      author: t.String(),
+    }),
+    updateArticleResponse: t.Object({
+      data: t.Object({
+        id: t.Number(),
+        title: t.String(),
+        author: t.String(),
+      }),
+    }),
+  })
+
+export const articleDeleteModel = (app: Elysia) =>
+  app.model({
+    articleId,
+    deleteArticleResponse: t.Object({
+      data: t.Object({
+        id: t.Number(),
+      }),
+    }),
+  })
+
+export const articleModel = (app: Elysia) =>
+  app
+    .use(addArticleModel)
+    .use(findArticleModel)
+    .use(articleResponseModel)
+    .use(articleListResponseModel)
+    .use(articleUpdateModel)
+    .use(articleDeleteModel)
