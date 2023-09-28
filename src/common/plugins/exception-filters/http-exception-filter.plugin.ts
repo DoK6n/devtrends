@@ -1,9 +1,11 @@
 import Elysia from 'elysia'
 import { HTTP_STATUS } from '../../constants'
-import { logger } from 'src/common/plugins'
+import { createPinoLogger } from 'src/common/plugins'
 
 export const httpExceptionFilter = () => (app: Elysia) =>
-  app.use(logger()).onError(({ code, error: { message }, set, log }) => {
+  app.onError(({ code, error: { message }, set }) => {
+    const log = createPinoLogger()
+
     log.error(`[${code}] - ${message}`)
 
     switch (code) {
