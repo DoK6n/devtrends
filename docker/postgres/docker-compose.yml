@@ -1,0 +1,13 @@
+version: '3.1'
+
+services:
+  db:
+    image: postgres
+    container_name: devtrends
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: password
+    ports:
+      - '5433:5432'
+    volumes:
+      - ./db/data:/var/lib/postgresql/data

@@ -3,18 +3,20 @@
   "version": "0.0.1",
   "module": "src/index.js",
   "scripts": {
-    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "lint": "eslint \"src/**/*.ts\" --fix",
     "predev": "bun run format & bun run lint",
-    "dev": "bun run --watch src/index.ts | pino-pretty",
-    "test": "bun test --watch --test-name-pattern *.spec.ts"
+    "dev": "bun run --watch src/index.ts",
+    "test": "bun test --watch"
   },
   "dependencies": {
     "@elysiajs/cors": "^0.7.0",
     "@elysiajs/swagger": "^0.7.2",
+    "@prisma/client": "^5.3.1",
     "dayjs": "^1.11.10",
     "elysia": "latest",
-    "pino": "^8.15.1"
+    "pino": "^8.15.1",
+    "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
     "@elysiajs/eden": "^0.7.3",
@@ -26,6 +28,8 @@
     "eslint-plugin-prettier": "^5.0.0",
     "pino-pretty": "^10.2.0",
     "prettier": "^3.0.3",
+    "prisma": "^5.3.1",
+    "prisma-query-log": "^3.2.0",
     "typescript": "^5.2.2"
   }
 }
