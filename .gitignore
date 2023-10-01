@@ -42,4 +42,4 @@ yarn-error.log*
 package-lock.json
 **/*.bun
 
-**/test/db/**/*.db
+*.db

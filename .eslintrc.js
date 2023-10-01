@@ -14,6 +14,8 @@ module.exports = {
     sourceType: 'module',
   },
   rules: {
+    '@typescript-eslint/no-namespace': 'off',
+    '@typescript-eslint/ban-types': 'off',
     semi: 'off',
     quotes: 'off',
     'array-bracket-spacing': 'error',
