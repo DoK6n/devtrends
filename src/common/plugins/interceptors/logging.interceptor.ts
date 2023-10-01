@@ -2,8 +2,8 @@ import Elysia from 'elysia'
 import { logger } from '../loggers'
 import { isEmptyObject } from 'src/common/utils'
 
-export const loggingInterceptor = () => (app: Elysia) =>
-  app
+export const loggingInterceptor = () =>
+  new Elysia({ name: 'logging-interceptor' })
     .use(logger())
     .onBeforeHandle(({ request, params, query, body, log }) => {
       const logObject = {
