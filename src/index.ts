@@ -2,13 +2,12 @@ import cors from '@elysiajs/cors'
 import {
   createPinoLogger,
   httpExceptionFilter,
-  logger,
   loggingInterceptor,
 } from './common/plugins'
-import { articlesRoute } from './routes/articles.route'
 import { Elysia } from 'elysia'
 import swagger from '@elysiajs/swagger'
 import { setup } from './config'
+import { v1Routes } from './routes'
 
 const _serve = { serve: { hostname: 'localhost' } }
 
@@ -17,10 +16,9 @@ export const app = new Elysia(_serve)
   .use(setup())
   .use(cors())
   .use(swagger())
-  .use(logger())
   .use(loggingInterceptor())
   .use(httpExceptionFilter())
-  .use(articlesRoute())
+  .use(v1Routes)
 
 // eslint-disable-next-line no-magic-numbers
 const PORT = Bun.env.PORT || 8001

@@ -1,1 +1,1 @@
-export * from './articles.route'
+export * from './v1'
