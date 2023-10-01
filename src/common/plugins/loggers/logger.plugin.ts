@@ -11,12 +11,13 @@ const loggerOptions: LoggerOptions = {
   },
   base: undefined,
   level: Bun.env.PORT === 'production' ? 'info' : 'debug',
-  // transport: {
-  //   target: 'pino-pretty',
-  //   options: {
-  //     colorize: true,
-  //   },
-  // },
+  transport: {
+    target: 'pino-pretty',
+    options: {
+      colorize: true,
+      sync: true,
+    },
+  },
   timestamp: () =>
     `, "timestamp":"${date().tz().format('YYYY-MM-DD HH:mm:ss')}"`,
 }
