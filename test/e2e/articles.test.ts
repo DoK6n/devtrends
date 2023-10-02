@@ -43,7 +43,7 @@ describe('E2E articles test', async () => {
   describe('실제 데이터 테스트', async () => {
     await resetDataAndSeqArticles()
     let article: Articles
-    const { data, error } = await client.v1.articles.add.post({
+    const { data, error } = await client.v1.articles.post({
       title: 'Elysia!!',
       author: 'dok6n',
     })
@@ -77,7 +77,7 @@ describe('E2E articles test', async () => {
 
     describe('PATCH /v1/articles/update/:articleId', () => {
       it('게시글 업데이트', async () => {
-        const resposnse = await client.v1.articles.update[article.id].patch({
+        const resposnse = await client.v1.articles[article.id].patch({
           title: '수정된 게시글',
           author: 'tester',
         })
@@ -94,19 +94,22 @@ describe('E2E articles test', async () => {
 
     describe('DELETE /v1/articles/remove/:articleId', () => {
       it('게시글 삭제', async () => {
-        const lastArticle = (await new PrismaClient().articles.findFirst({
+        await client.v1.articles.post({
+          title: '게시글 삭제 테스트용 글',
+          author: 'dok6n',
+        })
+
+        const lastArticle = await new PrismaClient().articles.findFirst({
           orderBy: {
             id: 'desc',
           },
-          select: {
-            id: true,
-          },
-        })) as {
-          id: number
+        })
+
+        if (!lastArticle) {
+          throw new Error('마지막 Article 없음')
         }
 
-        const { data } =
-          await client.v1.articles.remove[lastArticle.id].delete()
+        const { data } = await client.v1.articles[lastArticle.id].delete()
 
         expect(data).toStrictEqual({
           data: {

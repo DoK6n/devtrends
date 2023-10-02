@@ -1,64 +1,63 @@
 import Elysia from 'elysia'
-import { setup } from 'src/config'
 import {
-  addArticleModel,
+  createArticleModel,
   articleDeleteModel,
-  articleListResponseModel,
+  articlesResponseModel,
   articleResponseModel,
-  articleUpdateModel,
+  articleEditModel,
   findArticleModel,
 } from 'src/models'
+import { articlesRepository } from 'src/repositories'
 
 export namespace ArticlesController {
   export const retrieveArticles = new Elysia({ name: 'retrieveArticles' })
-    .use(setup)
-    .use(articleListResponseModel)
+    .use(articlesRepository)
+    .use(articlesResponseModel)
     .get(
       '',
-      async ({ prisma }) => {
-        const articleList = await prisma.articles.findMany()
+      async ({ articlesRepository }) => {
+        const articles = await articlesRepository.findArticles()
         return {
-          data: articleList,
+          data: articles,
         }
       },
       {
-        response: 'articleListResponse',
+        response: 'articlesResponse',
       },
     )
 
-  export const addArticles = new Elysia({ name: 'addArticles' })
-    .use(setup)
-    .use(addArticleModel)
+  /**
+   * 새로운 article을 저장합니다.
+   */
+  export const createArticle = new Elysia({ name: 'createArticle' })
+    .use(articlesRepository)
+    .use(createArticleModel)
     .use(articleResponseModel)
     .post(
-      '/add',
-      async ({ body, prisma }) => {
-        const createdArticle = await prisma.articles.create({
-          data: body,
-        })
+      '',
+      async ({ body, articlesRepository }) => {
+        const createdArticle = await articlesRepository.createArticle(body)
 
         return {
           data: createdArticle,
         }
       },
       {
-        body: 'addArticle',
+        body: 'createArticleBody',
         response: 'articleResponse',
       },
     )
 
   export const retrieveArticleById = new Elysia({ name: 'retrieveArticleById' })
-    .use(setup)
+    .use(articlesRepository)
     .use(findArticleModel)
     .use(articleResponseModel)
     .get(
       '/:articleId',
-      async ({ params, prisma }) => {
-        const retrievedArticle = await prisma.articles.findUnique({
-          where: {
-            id: params.articleId,
-          },
-        })
+      async ({ params, articlesRepository }) => {
+        const retrievedArticle = await articlesRepository.findArticleById(
+          params.articleId,
+        )
 
         return {
           data: retrievedArticle || {},
@@ -70,50 +69,42 @@ export namespace ArticlesController {
       },
     )
 
-  export const updateArticleById = new Elysia({ name: 'updateArticleById' })
-    .use(setup)
-    .use(articleUpdateModel)
+  export const editArticleById = new Elysia({ name: 'editArticleById' })
+    .use(articlesRepository)
+    .use(articleEditModel)
     .patch(
-      '/update/:articleId',
-      async ({ params, body, prisma }) => {
-        const updatedArticle = await prisma.articles.update({
-          where: {
-            id: params.articleId,
-          },
-          data: {
-            title: body.title,
-            author: body.author,
-          },
-        })
+      '/:articleId',
+      async ({ params, body, articlesRepository }) => {
+        const editedArticle = await articlesRepository.updateArticle(
+          params.articleId,
+          body,
+        )
 
         return {
-          data: updatedArticle,
+          data: editedArticle,
         }
       },
       {
         params: 'articleId',
-        body: 'updateArticleBody',
-        response: 'updateArticleResponse',
+        body: 'editArticleBody',
+        response: 'editArticleResponse',
       },
     )
 
   export const removeArticleById = new Elysia({ name: 'removeArticleById' })
-    .use(setup)
+    .use(articlesRepository)
     .use(articleDeleteModel)
     .delete(
-      '/remove/:articleId',
-      async ({ params, prisma }) => {
-        const deletedArticleId = await prisma.articles.delete({
-          where: {
-            id: params.articleId,
-          },
-          select: {
-            id: true,
-          },
-        })
+      '/:articleId',
+      async ({ params, articlesRepository }) => {
+        const deletedArticleId = await articlesRepository.removeArticleById(
+          params.articleId,
+        )
 
         return {
-          data: deletedArticleId,
+          data: {
+            id: deletedArticleId.id,
+          },
         }
       },
       {
