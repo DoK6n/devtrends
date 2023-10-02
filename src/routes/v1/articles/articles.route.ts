@@ -3,10 +3,18 @@ import Elysia from 'elysia'
 
 export const articlesRoute = new Elysia({
   name: 'articlesRoute',
-  prefix: '/articles',
-})
-  .use(ArticlesController.retrieveArticles)
-  .use(ArticlesController.addArticles)
-  .use(ArticlesController.retrieveArticleById)
-  .use(ArticlesController.updateArticleById)
-  .use(ArticlesController.removeArticleById)
+}).group(
+  '/articles',
+  {
+    detail: {
+      tags: ['Articles'],
+    },
+  },
+  app =>
+    app
+      .use(ArticlesController.retrieveArticles)
+      .use(ArticlesController.addArticles)
+      .use(ArticlesController.retrieveArticleById)
+      .use(ArticlesController.updateArticleById)
+      .use(ArticlesController.removeArticleById),
+)
