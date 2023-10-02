@@ -11,7 +11,7 @@ import {
 
 export namespace ArticlesController {
   export const retrieveArticles = new Elysia({ name: 'retrieveArticles' })
-    .use(setup())
+    .use(setup)
     .use(articleListResponseModel)
     .get(
       '',
@@ -27,7 +27,7 @@ export namespace ArticlesController {
     )
 
   export const addArticles = new Elysia({ name: 'addArticles' })
-    .use(setup())
+    .use(setup)
     .use(addArticleModel)
     .use(articleResponseModel)
     .post(
@@ -48,7 +48,7 @@ export namespace ArticlesController {
     )
 
   export const retrieveArticleById = new Elysia({ name: 'retrieveArticleById' })
-    .use(setup())
+    .use(setup)
     .use(findArticleModel)
     .use(articleResponseModel)
     .get(
@@ -71,7 +71,7 @@ export namespace ArticlesController {
     )
 
   export const updateArticleById = new Elysia({ name: 'updateArticleById' })
-    .use(setup())
+    .use(setup)
     .use(articleUpdateModel)
     .patch(
       '/update/:articleId',
@@ -98,7 +98,7 @@ export namespace ArticlesController {
     )
 
   export const removeArticleById = new Elysia({ name: 'removeArticleById' })
-    .use(setup())
+    .use(setup)
     .use(articleDeleteModel)
     .delete(
       '/remove/:articleId',
