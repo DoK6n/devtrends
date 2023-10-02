@@ -24,7 +24,7 @@ const loggerOptions: LoggerOptions = {
 
 export const createPinoLogger = () => pino(loggerOptions)
 
-export const logger = () =>
+export const loggerPlugin = () =>
   new Elysia({
     name: 'logger',
   }).derive(() => {
