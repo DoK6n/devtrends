@@ -4,7 +4,7 @@ import { createPinoLogger } from 'src/common/plugins'
 
 const log = createPinoLogger()
 
-const prisma = new PrismaClient({
+export const prisma = new PrismaClient({
   log: [
     { emit: 'event', level: 'query' },
     { emit: 'stdout', level: 'info' },
@@ -25,5 +25,3 @@ const queryLogger = createPrismaQueryEventHandler({
 })
 
 prisma.$on('query', queryLogger)
-
-export default prisma
