@@ -47,15 +47,6 @@ module.exports = {
     'no-console': 'warn',
     'no-eval': 'error', // eval() 사용 금지
     'no-lonely-if': 'error',
-    'no-magic-numbers': [
-      'error',
-      {
-        ignoreArrayIndexes: true,
-        ignoreClassFieldInitialValues: true, // 클래스 필드의 초기 값으로 사용되는 숫자가 괜찮은 것으로 간주되는지 지정
-        enforceConst: true, // 숫자의 변수 선언에서 const 키워드를 확인해야 하는지 여부를 지정
-        detectObjects: false, // 객체 속성을 설정할 때 숫자를 감지해야 하는지 여부를 지정
-      },
-    ],
     'no-multi-assign': 'error', // 단일 키워드 내에서 다중 변수 할당 금지
     'no-new-func': 'error', // new function 금지
     'no-param-reassign': 'error', // 함수 매개변수 재할당 금지
