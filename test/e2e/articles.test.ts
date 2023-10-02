@@ -4,7 +4,7 @@ import Elysia from 'elysia'
 
 import { edenTreaty } from '@elysiajs/eden'
 import { Articles, PrismaClient } from '@prisma/client'
-import { createPinoLogger, loggingInterceptor } from 'src/common/plugins'
+import { createPinoLogger, loggingInterceptorPlugin } from 'src/common/plugins'
 import { v1Routes } from 'src/routes'
 
 const resetDataAndSeqArticles = async () => {
@@ -27,7 +27,7 @@ describe('E2E articles test', async () => {
   const app = new Elysia(_serve)
     .get('/', () => 'healthy')
     // .use(database)
-    .use(loggingInterceptor())
+    .use(loggingInterceptorPlugin())
     .use(v1Routes)
     .listen(PORT)
 

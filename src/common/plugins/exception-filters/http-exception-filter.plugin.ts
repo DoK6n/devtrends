@@ -1,10 +1,10 @@
 import Elysia from 'elysia'
 import { HTTP_STATUS } from '../../constants'
-import { logger } from 'src/common/plugins'
+import { loggerPlugin } from 'src/common/plugins'
 
-export const httpExceptionFilter = () =>
+export const httpExceptionFilterPlugin = () =>
   new Elysia({ name: 'http-exception-filter' })
-    .use(logger())
+    .use(loggerPlugin())
     .onError(({ code, error: { message }, set, log }) => {
       log.error(`[${code}] - ${message}`)
 
