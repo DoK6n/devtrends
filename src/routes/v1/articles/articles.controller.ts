@@ -7,7 +7,6 @@ import {
   articleEditModel,
   findArticleModel,
 } from 'src/models'
-import { articlesRepository } from 'src/repositories/articles'
 import { articlesService } from 'src/services'
 
 export namespace ArticlesController {
