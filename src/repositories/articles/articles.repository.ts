@@ -7,11 +7,11 @@ export class ArticlesRepository extends PrismaRepository {
     super()
   }
 
-  findArticles() {
+  async findArticles() {
     return this.prisma.articles.findMany()
   }
 
-  findArticleById(articleId: ArticleId) {
+  async findArticleById(articleId: ArticleId) {
     return this.prisma.articles.findUnique({
       where: {
         id: articleId,
@@ -19,13 +19,13 @@ export class ArticlesRepository extends PrismaRepository {
     })
   }
 
-  createArticle(articles: CreateArticle) {
+  async createArticle(articles: CreateArticle) {
     return this.prisma.articles.create({
       data: articles,
     })
   }
 
-  updateArticle(articleId: ArticleId, articles: EditArticle) {
+  async updateArticle(articleId: ArticleId, articles: EditArticle) {
     return this.prisma.articles.update({
       where: {
         id: articleId,
@@ -37,7 +37,7 @@ export class ArticlesRepository extends PrismaRepository {
     })
   }
 
-  removeArticleById(articleId: ArticleId) {
+  async removeArticleById(articleId: ArticleId) {
     return this.prisma.articles.delete({
       where: {
         id: articleId,

@@ -7,16 +7,17 @@ import {
   articleEditModel,
   findArticleModel,
 } from 'src/models'
-import { articlesRepository } from 'src/repositories'
+import { articlesRepository } from 'src/repositories/articles'
+import { articlesService } from 'src/services'
 
 export namespace ArticlesController {
-  export const retrieveArticles = new Elysia({ name: 'retrieveArticles' })
-    .use(articlesRepository)
+  export const retrieveAllArticles = new Elysia({ name: 'retrieveArticles' })
+    .use(articlesService)
     .use(articlesResponseModel)
     .get(
       '',
-      async ({ articlesRepository }) => {
-        const articles = await articlesRepository.findArticles()
+      async ({ articlesService }) => {
+        const articles = await articlesService.fetchArticles()
         return {
           data: articles,
         }
@@ -30,13 +31,13 @@ export namespace ArticlesController {
    * 새로운 article을 저장합니다.
    */
   export const createArticle = new Elysia({ name: 'createArticle' })
-    .use(articlesRepository)
+    .use(articlesService)
     .use(createArticleModel)
     .use(articleResponseModel)
     .post(
       '',
-      async ({ body, articlesRepository }) => {
-        const createdArticle = await articlesRepository.createArticle(body)
+      async ({ body, articlesService }) => {
+        const createdArticle = await articlesService.createArticle(body)
 
         return {
           data: createdArticle,
@@ -49,13 +50,13 @@ export namespace ArticlesController {
     )
 
   export const retrieveArticleById = new Elysia({ name: 'retrieveArticleById' })
-    .use(articlesRepository)
+    .use(articlesService)
     .use(findArticleModel)
     .use(articleResponseModel)
     .get(
       '/:articleId',
-      async ({ params, articlesRepository }) => {
-        const retrievedArticle = await articlesRepository.findArticleById(
+      async ({ params, articlesService }) => {
+        const retrievedArticle = await articlesService.fetchArticleById(
           params.articleId,
         )
 
@@ -70,12 +71,12 @@ export namespace ArticlesController {
     )
 
   export const editArticleById = new Elysia({ name: 'editArticleById' })
-    .use(articlesRepository)
+    .use(articlesService)
     .use(articleEditModel)
     .patch(
       '/:articleId',
-      async ({ params, body, articlesRepository }) => {
-        const editedArticle = await articlesRepository.updateArticle(
+      async ({ params, body, articlesService }) => {
+        const editedArticle = await articlesService.editArticleById(
           params.articleId,
           body,
         )
@@ -92,14 +93,13 @@ export namespace ArticlesController {
     )
 
   export const removeArticleById = new Elysia({ name: 'removeArticleById' })
-    .use(articlesRepository)
+    .use(articlesService)
     .use(articleDeleteModel)
     .delete(
       '/:articleId',
-      async ({ params, articlesRepository }) => {
-        const deletedArticleId = await articlesRepository.removeArticleById(
-          params.articleId,
-        )
+      async ({ params, articlesService }) => {
+        const deletedArticleId =
+          await articlesService.labelInvalidArticleRecordById(params.articleId)
 
         return {
           data: {

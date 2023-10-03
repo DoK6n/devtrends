@@ -12,7 +12,7 @@ export const articlesRoute = new Elysia({
   },
   app =>
     app
-      .use(ArticlesController.retrieveArticles)
+      .use(ArticlesController.retrieveAllArticles)
       .use(ArticlesController.createArticle)
       .use(ArticlesController.retrieveArticleById)
       .use(ArticlesController.editArticleById)
